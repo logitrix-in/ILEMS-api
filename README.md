@@ -17,8 +17,7 @@ ILEMS-api/
 │
 ├── app/                                
 │   ├── migrations/                       
-│   │   └── __init__.py   
-│	  │                                    
+│   │   └── __init__.py                                       
 │   ├── __init__.py                    
 │   ├── admin.py                     
 │   ├── models.py                     
