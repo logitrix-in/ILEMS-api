@@ -33,10 +33,14 @@ ILEMS-api/
 ## **Getting Started**
 
 ### **Clone this Repository** 
- ```git clone https://github.com/logitrix-in/ILEMS-api.git```
+ ```
+ git clone https://github.com/logitrix-in/ILEMS-api.git
+```
  
 ### **Install System Requirements**
- ```pip install -r requirements.txt```
+ ```
+ pip install -r requirements.txt
+```
  
 ### **Configure Environment Variables**
 > Generate an **.env** file in the root directory and incorporate the necessary environment variables there.
