@@ -28,7 +28,7 @@ class LoginUser(APIView):
         if db:
             if db.check_password(password):
                 response = Response({"message": "User Logged In"})
-                response.set_cookie("uid", db.pk, secure=True, httponly=True)
+                response.set_cookie("uid", db.pk, secure=True, httponly=True,samesite="None")
                 return response
             else:
                 return Response(
@@ -49,7 +49,7 @@ class LoginUser(APIView):
         
     def delete(self,request):
         response = Response({"message": "User Logged Out"})
-        response.delete_cookie("uid")
+        response.delete_cookie("uid",expires=0, max_age=0, secure=True, samesite='none')
         return response
 
 class RegisterUser(APIView):
