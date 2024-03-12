@@ -39,6 +39,18 @@ class LoginUser(APIView):
                 {"message": "User does not exist"}, status=HTTP_404_NOT_FOUND
             )
 
+    def get(self,request):
+        pk = request.COOKIES.get("uid", None)
+        if pk:
+            db = CustomUser.objects.get(pk=pk)
+            return Response(UserSerializer(db).data)
+        else:
+            return Response({"message": "User not logged in"}, status=HTTP_404_NOT_FOUND)
+        
+    def delete(self,request):
+        response = Response({"message": "User Logged Out"})
+        response.delete_cookie("uid")
+        return response
 
 class RegisterUser(APIView):
     def get(self, request):
