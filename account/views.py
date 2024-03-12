@@ -28,7 +28,7 @@ class LoginUser(APIView):
         if db:
             if db.check_password(password):
                 response = Response({"message": "User Logged In"})
-                response.set_cookie("uid", db.pk, secure=False, httponly=True)
+                response.set_cookie("uid", db.pk, secure=True, httponly=True)
                 return response
             else:
                 return Response(
