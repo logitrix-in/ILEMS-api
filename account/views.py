@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import logout
+from account.permissions import HasPermission
 from account.serializers import UserSerializer
 from django.contrib.auth.models import Group
 from .models import CustomUser
@@ -53,6 +54,7 @@ class LoginUser(APIView):
         return response
 
 class RegisterUser(APIView):
+    permission_classes=[HasPermission]
     def get(self, request):
         db = CustomUser.objects.all()
         return Response(UserSerializer(db, many=True).data)
@@ -89,7 +91,7 @@ class RegisterUser(APIView):
                 groupDB.user_set.add(db)
 
             if type == "PSI":
-                groupDB, group_created = Group.objects.get_or_create(name="PSI")
+                groupDB, group_created = Group.objects.get_or_create(name="c")
                 groupDB.user_set.add(db)
 
             if type == "Staff":
