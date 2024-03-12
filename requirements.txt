@@ -5,3 +5,4 @@ dnspython==2.6.1
 python-dotenv
 whitenoise
 djangorestframework
+gunicorn
