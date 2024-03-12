@@ -54,7 +54,6 @@ class LoginUser(APIView):
         return response
 
 class RegisterUser(APIView):
-    permission_classes=[HasPermission]
     def get(self, request):
         db = CustomUser.objects.all()
         return Response(UserSerializer(db, many=True).data)
