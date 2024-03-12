@@ -9,6 +9,11 @@ class Dashboard(APIView):
     def get(self, request):
         return Response(
             {
-
+                "FIR":{
+                    "total":100,
+                    "last_7_days":20,
+                    "last_month":80
+                },
+                
             }
         )

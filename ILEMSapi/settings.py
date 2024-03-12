@@ -24,13 +24,7 @@ DJANGO_SECRET_KEY = "django-insecure-orn=avd+dv1)uth3wvmd14wss*8$#%g3#+bcutwza)r
 
 
 MONGO_CLIENT = (
-    "mongodb+srv://"
-    + MONGO_USERNAME
-    + ":"
-    + MONGO_PASSWORD
-    + "@"
-    + MONGO_HOST
-    + "/?retryWrites=true&w=majority&appName=Cluster0"
+    "mongodb://mongo:vnFnRKqLuaPREHpGjLdYWnjCQjOAvwFY@roundhouse.proxy.rlwy.net:24947"
 )
 
 # print(MONGO_CLIENT)
@@ -63,6 +57,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "whitenoise.runserver_nostatic",
     "rest_framework",
+    "django_extensions",
     "account",
     "corsheaders",
     "analytics",
