@@ -1,3 +1,5 @@
 env
 .env
 static
+data.csv
+fir.csv
