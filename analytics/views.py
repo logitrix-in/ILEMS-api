@@ -34,6 +34,12 @@ class Dashboard(APIView):
         current_year= datetime.now().year
         last_7_days_count = db.filter(registered_on__gte=last_week,year=current_year).count()
         
+        # Last Year
+        last_year = datetime.now().year
+        last_year_count = db.filter(year=last_year).count()
+
+
+
         # Crime Rates per district
 
         unique_district = list(set(db.values_list("district", flat=True)))
@@ -50,7 +56,8 @@ class Dashboard(APIView):
                 "fir":{
                     "total":db.count(),
                     "last_7_days":last_7_days_count,
-                    "last_month":last_month_count
+                    "last_month":last_month_count,
+                    "last_year":last_year_count
                 },
                 "trends":{
                     "fir":{
