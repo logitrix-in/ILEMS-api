@@ -37,7 +37,7 @@ class Dashboard(APIView):
 
         return Response(
             {
-                "FIR":{
+                "fir":{
                     "total":db.count(),
                     "last_7_days":last_7_days_count,
                     "last_month":last_month_count
