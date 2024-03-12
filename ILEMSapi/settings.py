@@ -62,7 +62,10 @@ INSTALLED_APPS = [
     "corsheaders",
     "analytics",
 ]
-
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'analytics.pagination.StandardResultsSetPagination',
+    'PAGE_SIZE': 5,
+}
 MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",

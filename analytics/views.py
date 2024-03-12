@@ -5,6 +5,23 @@ from rest_framework.response import Response
 from account.permissions import HasPermission
 from analytics.models import FIR
 from datetime import datetime, timedelta
+from analytics.pagination import StandardResultsSetPagination
+
+from analytics.serializer import FIRSerializer
+
+class FIRList(APIView):
+    permission_classes=[HasPermission]
+    def get(self, request):
+        paginator = StandardResultsSetPagination()
+        db = FIR.objects.all()
+        page = paginator.paginate_queryset(db, request)
+        if page is not None:
+            serializer = FIRSerializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        serializer = FIRSerializer(db, many=True)
+        return Response(
+            FIRSerializer(db, many=True).data
+        )
 class Dashboard(APIView):
     permission_classes=[HasPermission]
     def get(self, request):
