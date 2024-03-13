@@ -77,6 +77,27 @@ class Dashboard(APIView):
                 "district": district,
                 "total": db.count_documents({"district": district})
             })
+        #  Crime rates per district last month
+        
+        crime_rates_last_month = []
+        for district in unique_districts:
+            crime_rates_last_month.append({
+                "district": district,
+                "total": db.count_documents({"district": district, "registered_on": {"$gte": last_month}})
+            })
+        max_total_dict = max(crime_rates_last_month, key=lambda x: x["total"])
+        
+        age_distribution_of_victims_and_accused = []
+        for i in range(0, 50, 10):
+            age_distribution_of_victims_and_accused.append({
+                "age": f"{i}-{i+9}",
+                "victims": db.count_documents({"victim_age": {"$gte": i, "$lt": i+10}}),
+                "accused": db.count_documents({"accused_age": {"$gte": i, "$lt": i+10}})
+            })
+        
+        
+
+
 
         return Response(
             {
@@ -89,9 +110,12 @@ class Dashboard(APIView):
                 "trends":{
                     "fir":{
                         "yearly_trends":yearly_trends,
-                        "crime_rates_district":crime_rates
+                        "crime_rates_district":crime_rates,
+                        
                     }
-                }
+                },
+                "hotspot":max_total_dict,
+                "age_distribution_of_victims_and_accused":age_distribution_of_victims_and_accused
                 
             }
         )
