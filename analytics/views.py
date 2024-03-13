@@ -28,8 +28,6 @@ class FIRList(APIView):
 class Dashboard(APIView):
     permission_classes=[HasPermission]
     def get(self, request):
-
-        # db = FIR.objects.all()
         db = DB['analytics_fir']
             
         
