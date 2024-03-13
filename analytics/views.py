@@ -112,6 +112,14 @@ class Dashboard(APIView):
                 {"district": distr, "total": db.count_documents({"district": distr})}
             )
 
+        fir_type_count = []
+        fir_types = db.distinct("fir_type")
+
+        for firs in fir_types:
+            fir_type_count.append(
+                {"fir_type": firs, "total": db.count_documents({"fir_type": firs})}
+            )
+
         return Response(
             {
                 "fir": {
@@ -129,5 +137,6 @@ class Dashboard(APIView):
                 "hotspot": max_total_dict,
                 "age_distribution_of_victims_and_accused": age_distribution_of_victims_and_accused,
                 "district_wise_count": district_firs_count,
+                "crime_type_analysis": fir_type_count,
             }
         )
