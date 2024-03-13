@@ -1,6 +1,7 @@
 # Create your views here.
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from ILEMSapi.db import DB
 
 
 from account.permissions import HasPermission
@@ -9,6 +10,7 @@ from datetime import datetime, timedelta
 from analytics.pagination import StandardResultsSetPagination
 
 from analytics.serializer import FIRSerializer
+from django.core.cache import cache
 
 class FIRList(APIView):
     permission_classes=[HasPermission]
@@ -26,48 +28,54 @@ class FIRList(APIView):
 class Dashboard(APIView):
     permission_classes=[HasPermission]
     def get(self, request):
-        db = FIR.objects.all()
+
+        # db = FIR.objects.all()
+        db = DB['analytics_fir']
+            
         
 
         # Yearly Trends
 
-        available_year = list(set(db.values_list("year", flat=True)))
+        available_years = db.distinct("year")  # Get unique years
         yearly_trends = []
 
-        for year in available_year:
+        for year in available_years:
             yearly_trends.append({
                 "year": year,
-                "total": db.filter(year=year).count()
+                "total": db.count_documents({"year": year})
             })
-        
-        
-        #  Last Month Count
-        
-        last_month = datetime.now() - timedelta(days=30)
-        current_year= datetime.now().year
-        last_month_count = db.filter(registered_on__gte=last_month,year=current_year).count()
 
-        #  Last 7 days Count
+        # Last Month Count
+
+        last_month = datetime.now() - timedelta(days=30)
+        current_year = datetime.now().year
+        last_month_count = db.count_documents({
+            "registered_on": {"$gte": last_month},
+            "year": current_year
+        })
+
+        # Last 7 Days Count
 
         last_week = datetime.now() - timedelta(days=7)
-        current_year= datetime.now().year
-        last_7_days_count = db.filter(registered_on__gte=last_week,year=current_year).count()
-        
+        last_7_days_count = db.count_documents({
+            "registered_on": {"$gte": last_week},
+            "year": current_year
+        })
+
         # Last Year
-        last_year = datetime.now().year
-        last_year_count = db.filter(year=last_year).count()
 
+        last_year = datetime.now().year - 1
+        last_year_count = db.count_documents({"year": last_year})
 
+        # Crime Rates per District
 
-        # Crime Rates per district
-
-        unique_district = list(set(db.values_list("district", flat=True)))
+        unique_districts = db.distinct("district")
         crime_rates = []
 
-        for dis in unique_district:
+        for district in unique_districts:
             crime_rates.append({
-                "district": dis,
-                "total": db.filter(district=dis).count()
+                "district": district,
+                "total": db.count_documents({"district": district})
             })
 
         return Response(
