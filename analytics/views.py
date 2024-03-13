@@ -2,6 +2,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+
 from account.permissions import HasPermission
 from analytics.models import FIR
 from datetime import datetime, timedelta
@@ -26,6 +27,7 @@ class Dashboard(APIView):
     permission_classes=[HasPermission]
     def get(self, request):
         db = FIR.objects.all()
+        
 
         # Yearly Trends
 

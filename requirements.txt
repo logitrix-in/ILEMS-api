@@ -8,3 +8,4 @@ djangorestframework
 gunicorn
 django-cors-headers
 django-extensions
+pymongo[snappy,gssapi,srv,tls]
