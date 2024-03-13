@@ -2,6 +2,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from ILEMSapi.db import DB
+from django.db.models import Count
 
 
 from account.permissions import HasPermission
@@ -12,8 +13,10 @@ from analytics.pagination import StandardResultsSetPagination
 from analytics.serializer import FIRSerializer
 from django.core.cache import cache
 
+
 class FIRList(APIView):
-    permission_classes=[HasPermission]
+    permission_classes = [HasPermission]
+
     def get(self, request):
         paginator = StandardResultsSetPagination()
         db = FIR.objects.all()
@@ -22,15 +25,14 @@ class FIRList(APIView):
             serializer = FIRSerializer(page, many=True)
             return paginator.get_paginated_response(serializer.data)
         serializer = FIRSerializer(db, many=True)
-        return Response(
-            FIRSerializer(db, many=True).data
-        )
+        return Response(FIRSerializer(db, many=True).data)
+
+
 class Dashboard(APIView):
-    permission_classes=[HasPermission]
+    permission_classes = [HasPermission]
+
     def get(self, request):
-        db = DB['analytics_fir']
-            
-        
+        db = DB["analytics_fir"]
 
         # Yearly Trends
 
@@ -38,27 +40,24 @@ class Dashboard(APIView):
         yearly_trends = []
 
         for year in available_years:
-            yearly_trends.append({
-                "year": year,
-                "total": db.count_documents({"year": year})
-            })
+            yearly_trends.append(
+                {"year": year, "total": db.count_documents({"year": year})}
+            )
 
         # Last Month Count
 
         last_month = datetime.now() - timedelta(days=30)
         current_year = datetime.now().year
-        last_month_count = db.count_documents({
-            "registered_on": {"$gte": last_month},
-            "year": current_year
-        })
+        last_month_count = db.count_documents(
+            {"registered_on": {"$gte": last_month}, "year": current_year}
+        )
 
         # Last 7 Days Count
 
         last_week = datetime.now() - timedelta(days=7)
-        last_7_days_count = db.count_documents({
-            "registered_on": {"$gte": last_week},
-            "year": current_year
-        })
+        last_7_days_count = db.count_documents(
+            {"registered_on": {"$gte": last_week}, "year": current_year}
+        )
 
         # Last Year
 
@@ -71,49 +70,64 @@ class Dashboard(APIView):
         crime_rates = []
 
         for district in unique_districts:
-            crime_rates.append({
-                "district": district,
-                "total": db.count_documents({"district": district})
-            })
+            crime_rates.append(
+                {
+                    "district": district,
+                    "total": db.count_documents({"district": district}),
+                }
+            )
         #  Crime rates per district last month
-        
+
         crime_rates_last_month = []
         for district in unique_districts:
-            crime_rates_last_month.append({
-                "district": district,
-                "total": db.count_documents({"district": district, "registered_on": {"$gte": last_month}})
-            })
+            crime_rates_last_month.append(
+                {
+                    "district": district,
+                    "total": db.count_documents(
+                        {"district": district, "registered_on": {"$gte": last_month}}
+                    ),
+                }
+            )
         max_total_dict = max(crime_rates_last_month, key=lambda x: x["total"])
-        
+
         age_distribution_of_victims_and_accused = []
         for i in range(0, 50, 10):
-            age_distribution_of_victims_and_accused.append({
-                "age": f"{i}-{i+9}",
-                "victims": db.count_documents({"victim_age": {"$gte": i, "$lt": i+10}}),
-                "accused": db.count_documents({"accused_age": {"$gte": i, "$lt": i+10}})
-            })
-        
-        
+            age_distribution_of_victims_and_accused.append(
+                {
+                    "age": f"{i}-{i+9}",
+                    "victims": db.count_documents(
+                        {"victim_age": {"$gte": i, "$lt": i + 10}}
+                    ),
+                    "accused": db.count_documents(
+                        {"accused_age": {"$gte": i, "$lt": i + 10}}
+                    ),
+                }
+            )
 
+        district_firs_count = []
+        district_name = db.distinct("district")
 
+        for distr in district_name:
+            district_firs_count.append(
+                {"district": distr, "total": db.count_documents({"district": distr})}
+            )
 
         return Response(
             {
-                "fir":{
-                    "total":db.count(),
-                    "last_7_days":last_7_days_count,
-                    "last_month":last_month_count,
-                    "last_year":last_year_count
+                "fir": {
+                    "total": db.count(),
+                    "last_7_days": last_7_days_count,
+                    "last_month": last_month_count,
+                    "last_year": last_year_count,
                 },
-                "trends":{
-                    "fir":{
-                        "yearly_trends":yearly_trends,
-                        "crime_rates_district":crime_rates,
-                        
+                "trends": {
+                    "fir": {
+                        "yearly_trends": yearly_trends,
+                        "crime_rates_district": crime_rates,
                     }
                 },
-                "hotspot":max_total_dict,
-                "age_distribution_of_victims_and_accused":age_distribution_of_victims_and_accused
-                
+                "hotspot": max_total_dict,
+                "age_distribution_of_victims_and_accused": age_distribution_of_victims_and_accused,
+                "district_wise_count": district_firs_count,
             }
         )
