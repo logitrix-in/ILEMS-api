@@ -138,5 +138,48 @@ class Dashboard(APIView):
                 "age_distribution_of_victims_and_accused": age_distribution_of_victims_and_accused,
                 "district_wise_count": district_firs_count,
                 "crime_type_analysis": fir_type_count,
+                # static data
+                "fir_processing_analysis": {
+                    "ongoing": 752,
+                    "completed": db.count() - 752,
+                },
+                "Demographic Analysis": {
+                    "Men": 45124,
+                    "Women": 44156,
+                    "Children": 42144,
+                },
+                "IO Performance": "Good",
+                "victim_accused_counts": {
+                    "victim": 1520,
+                    "accused": 1210,
+                },
+                "arrest_conviction_rates": {
+                    "arrested": 1010,
+                    "convicted": 1000,
+                },
+                "complaint_mode_analysis": {
+                    "online": 1240,
+                    "offline": 2450,
+                },
+                "place_of_offence_analysis": max_total_dict,
+                "act_section_analysis": {
+                    "440A": 10,
+                    "255B": 153,
+                    "156C": 124,
+                },
+                "victim_counts_by_age_group": {
+                    "under_18": 1245,
+                    "above_18": 1456,
+                    "above_60": 123,
+                },
+                "temporal_analysis": {
+                    "Monday": 50,
+                    "Tuesday": 15,
+                    "Wednesday": 60,
+                    "Thursday": 25,
+                    "Friday": 60,
+                    "Saturday": 100,
+                    "Sunday": 90,
+                },
             }
         )
