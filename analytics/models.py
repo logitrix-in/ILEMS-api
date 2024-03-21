@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 
@@ -44,20 +45,3 @@ class FIR(models.Model):
     fir_id = models.CharField(max_length=100)
     unit_id = models.CharField(max_length=100)
     crime_no = models.CharField(max_length=100)
-
-
-class Chargesheet(models.Model):
-    District_Name = models.CharField(max_length=100,null = True, blank=True)
-    UnitName = models.CharField(max_length=100,null = True, blank=True)
-    FIRNo = models.CharField(max_length=100,null = True, blank=True)
-    RI = models.CharField(max_length=100,null = True, blank=True)
-    Year = models.IntegerField(null = True, blank=True)
-    Month = models.IntegerField(null=True, blank=True)
-    FIR_Date = models.DateField(null=True, blank=True)
-    Report_Date = models.DateField(null=True, blank=True)
-    Final_Report_Date = models.DateField(null=True, blank=True)
-    Report_Type = models.CharField(max_length=100)
-    FIR_ID = models.TextField(null = True, blank=True)
-    Unit_ID = models.TextField(null = True, blank=True)
-    Crime_No = models.TextField(null = True, blank=True)
-    FR_ID = models.TextField(null = True, blank=True)

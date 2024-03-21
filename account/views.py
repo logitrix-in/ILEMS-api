@@ -29,7 +29,9 @@ class LoginUser(APIView):
         if db:
             if db.check_password(password):
                 response = Response({"message": "User Logged In"})
-                response.set_cookie("uid", db.pk, secure=True, httponly=True,samesite="None")
+                response.set_cookie(
+                    "uid", db.pk, secure=True, httponly=True, samesite="None"
+                )
                 return response
             else:
                 return Response(
@@ -40,18 +42,23 @@ class LoginUser(APIView):
                 {"message": "User does not exist"}, status=HTTP_404_NOT_FOUND
             )
 
-    def get(self,request):
+    def get(self, request):
         pk = request.COOKIES.get("uid", None)
         if pk:
             db = CustomUser.objects.get(pk=pk)
             return Response(UserSerializer(db).data)
         else:
-            return Response({"message": "User not logged in"}, status=HTTP_404_NOT_FOUND)
-        
-    def delete(self,request):
+            return Response(
+                {"message": "User not logged in"}, status=HTTP_404_NOT_FOUND
+            )
+
+    def delete(self, request):
         response = Response({"message": "User Logged Out"})
-        response.delete_cookie("uid",expires=0, max_age=0, secure=True, samesite='none')
+        response.delete_cookie(
+            "uid", expires=0, max_age=0, secure=True, samesite="none"
+        )
         return response
+
 
 class RegisterUser(APIView):
     def get(self, request):
@@ -81,6 +88,13 @@ class RegisterUser(APIView):
             db.email = email
             db.first_name = first_name
             db.last_name = last_name
+            db.employee_id = employee_id
+            db.department = department
+            db.rank = rank
+            db.police_station = police_station
+            db.contact = contact
+            db.profile_created_by = profile_created_by
+
             if type == "SP":
                 groupDB, group_created = Group.objects.get_or_create(name="SP")
                 groupDB.user_set.add(db)
@@ -90,7 +104,7 @@ class RegisterUser(APIView):
                 groupDB.user_set.add(db)
 
             if type == "PSI":
-                groupDB, group_created = Group.objects.get_or_create(name="c")
+                groupDB, group_created = Group.objects.get_or_create(name="PSI")
                 groupDB.user_set.add(db)
 
             if type == "Staff":
