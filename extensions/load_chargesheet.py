@@ -4,7 +4,6 @@ from analytics.models import Chargesheet
 
 from datetime import datetime
 
-
 def format_date(original_date_str):
     try:
         date_obj = datetime.strptime(original_date_str, "%d-%m-%Y")

@@ -61,10 +61,11 @@ INSTALLED_APPS = [
     "account",
     "corsheaders",
     "analytics",
+    "task",
 ]
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'analytics.pagination.StandardResultsSetPagination',
-    'PAGE_SIZE': 5,
+    "DEFAULT_PAGINATION_CLASS": "analytics.pagination.StandardResultsSetPagination",
+    "PAGE_SIZE": 5,
 }
 MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
@@ -138,7 +139,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
 
@@ -162,10 +163,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-
 CORS_ALLOWED_ORIGINS = [
     "https://dev.api.ilems.logitrix.in",
-    
     "http://localhost:8080",
     "http://127.0.0.1:8000",
 ]
@@ -178,11 +177,11 @@ CSRF_TRUSTED_ORIGINS = [
 
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://default:qiYXnjaIoFqBSACpNLInbPKsPAMgUvhh@monorail.proxy.rlwy.net:12410',  # Replace with your Redis server details
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://default:qiYXnjaIoFqBSACpNLInbPKsPAMgUvhh@monorail.proxy.rlwy.net:12410",  # Replace with your Redis server details
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
     }
 }
