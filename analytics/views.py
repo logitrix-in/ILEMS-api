@@ -188,6 +188,28 @@ class Dashboard(APIView):
 class Incidents(APIView):
     def get(self, request):
         db = DB["analytics_fir"]
+        fir_stages = db.distinct("crime_head_name")
+
+        fir_type_count = []
+
+        for firs in fir_stages:
+            fir_type_count.append(
+                {
+                    "incident_type": firs,
+                    "total": db.count_documents({"crime_head_name": firs}),
+                }
+            )
+
+        return Response(
+            {
+                "incidents": fir_type_count,
+            }
+        )
+
+
+class Resolved(APIView):
+    def get(self, request):
+        db = DB["analytics_fir"]
         fir_stages = db.distinct("fir_stage")
         resolved_stages = [
             "Abated",
