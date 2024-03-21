@@ -235,3 +235,21 @@ class Resolved(APIView):
                 "unresolved": total_count - resolved_count,
             }
         )
+
+
+class CrimeGroupCountAPIView(APIView):
+    def get(self, request):
+        # Filter data for the year 2023
+        db = DB["analytics_fir"]
+        response = {}
+        for i in range(1, 13):
+            data = db.find({"year": 2023, "month": i}, {"_id": False})
+            response[i] = {}
+            for j in data:
+                response[i][j["crime_group_name"]] = (
+                    response[i][j["crime_group_name"]] + 1
+                    if j["crime_group_name"] in response[i]
+                    else 1
+                )
+
+        return Response({"data": response})
