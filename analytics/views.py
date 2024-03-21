@@ -250,9 +250,9 @@ class CrimeGroupCountAPIView(APIView):
             )
             response[i] = {}
             for j in data:
-                response[i][j["crime_group_name"].strip()] = (
-                    response[i][j["crime_group_name"].strip()] + 1
-                    if j["crime_group_name"].strip() in response[i]
+                response[i][j["crime_group_name"].strip().title()] = (
+                    response[i][j["crime_group_name"].strip().title()] + 1
+                    if j["crime_group_name"].strip().title() in response[i]
                     else 1
                 )
 
