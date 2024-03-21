@@ -183,3 +183,55 @@ class Dashboard(APIView):
                 },
             }
         )
+
+
+class Incidents(APIView):
+    def get(self, request):
+        db = DB["analytics_fir"]
+        fir_stages = db.distinct("crime_head_name")
+
+        fir_type_count = []
+
+        for firs in fir_stages:
+            fir_type_count.append(
+                {
+                    "incident_type": firs,
+                    "total": db.count_documents({"crime_head_name": firs}),
+                }
+            )
+
+        return Response(
+            {
+                "incidents": fir_type_count,
+            }
+        )
+
+
+class Resolved(APIView):
+    def get(self, request):
+        db = DB["analytics_fir"]
+        fir_stages = db.distinct("fir_stage")
+        resolved_stages = [
+            "Abated",
+            "BoundOver",
+            "Compounded",
+            "Convicted",
+            "Dis/Acq",
+            "False Case",
+            "Other Disposal",
+            "Pending Trial",
+        ]
+        resolved_count = 0
+        total_count = 0
+        for firs in fir_stages:
+            curr_count = db.count_documents({"fir_stage": firs})
+            total_count = total_count + curr_count
+            if firs in resolved_stages:
+                resolved_count = resolved_count + curr_count
+
+        return Response(
+            {
+                "resolved": resolved_count,
+                "unresolved": total_count - resolved_count,
+            }
+        )
