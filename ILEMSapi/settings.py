@@ -163,12 +163,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-CORS_ALLOWED_ORIGINS = [
-    "https://dev.api.ilems.logitrix.in",
-    "http://localhost:8080",
-    "http://127.0.0.1:8000",
-]
-
+# CORS_ALLOWED_ORIGINS = [
+#     "https://dev.api.ilems.logitrix.in",
+#     "http://localhost:8080",
+#     "http://127.0.0.1:8000",
+# ]
+CORS_ALLOW_ALL_ORIGINS=True
 CSRF_TRUSTED_ORIGINS = [
     "https://dev.api.ilems.logitrix.in",
     "http://localhost:8080",
