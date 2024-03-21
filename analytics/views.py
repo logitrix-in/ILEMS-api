@@ -12,6 +12,7 @@ from analytics.pagination import StandardResultsSetPagination
 
 from analytics.serializer import FIRSerializer
 from django.core.cache import cache
+import calendar
 
 
 class FIRList(APIView):
@@ -243,16 +244,18 @@ class CrimeGroupCountAPIView(APIView):
         db = DB["analytics_fir"]
         response = {}
         year = request.GET.get("year", 2023)
+
         for i in range(1, 13):
             data = db.find(
                 {"year": int(year), "month": i},
                 {"_id": False},
             )
-            response[i] = {}
+            month = calendar.month_abbr[i]
+            response[month] = {}
             for j in data:
-                response[i][j["crime_group_name"].strip().title()] = (
-                    response[i][j["crime_group_name"].strip().title()] + 1
-                    if j["crime_group_name"].strip().title() in response[i]
+                response[month][j["crime_group_name"].strip().title()] = (
+                    response[month][j["crime_group_name"].strip().title()] + 1
+                    if j["crime_group_name"].strip().title() in response[month]
                     else 1
                 )
 
