@@ -240,7 +240,6 @@ class Resolved(APIView):
 
 class CrimeGroupCountAPIView(APIView):
     def get(self, request):
-        # Filter data for the year 2023
         db = DB["analytics_fir"]
         response = {}
         year = request.GET.get("year", 2023)
@@ -263,5 +262,39 @@ class CrimeGroupCountAPIView(APIView):
             {
                 "month_wise_analytics": response,
                 "year": year,
+            }
+        )
+
+
+class ComplaintModeAPIView(APIView):
+    def get(self, request):
+        db = DB["analytics_fir"]
+        complaint_types = db.distinct("complaint_mode")
+        response = {}
+        for complaint_mode in complaint_types:
+            response[complaint_mode] = db.count_documents(
+                {"complaint_mode": complaint_mode}
+            )
+
+        return Response(
+            {
+                "Complaint_Mode_Analysis": response,
+            }
+        )
+
+
+class FIRProcessingAPIView(APIView):
+    def get(self, request):
+        db = DB["analytics_fir"]
+        fir_stages = db.distinct("fir_stage")
+
+        response = {}
+        for firs in fir_stages:
+            curr_count = db.count_documents({"fir_stage": firs})
+            response[firs] = curr_count
+
+        return Response(
+            {
+                "fir_processing": response,
             }
         )
