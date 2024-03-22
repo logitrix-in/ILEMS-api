@@ -316,3 +316,24 @@ class VictimAccusedAPI(APIView):
                 "victims_accused_count": response,
             }
         )
+
+
+class FIRIdentificationMonthlyView(APIView):
+    def get(self, request):
+        db = DB["analytics_fir"]
+        response = {}
+        year = request.GET.get("year", 2023)
+
+        for i in range(1, 13):
+            data = db.count_documents(
+                {"year": int(year), "month": i},
+            )
+            month = calendar.month_abbr[i]
+            response[month] = data
+
+        return Response(
+            {
+                "month_wise_fir_analytics": response,
+                "year": year,
+            }
+        )

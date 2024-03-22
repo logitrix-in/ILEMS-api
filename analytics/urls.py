@@ -8,6 +8,7 @@ from .views import (
     ComplaintModeAPIView,
     FIRProcessingAPIView,
     VictimAccusedAPI,
+    FIRIdentificationMonthlyView,
 )
 
 urlpatterns = [
@@ -19,4 +20,5 @@ urlpatterns = [
     path("complaint-mode/", ComplaintModeAPIView.as_view()),
     path("fir-processing/", FIRProcessingAPIView.as_view()),
     path("victim-accused/", VictimAccusedAPI.as_view()),
+    path("fir-identification-monthly/", FIRIdentificationMonthlyView.as_view()),
 ]
