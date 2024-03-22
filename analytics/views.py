@@ -298,3 +298,21 @@ class FIRProcessingAPIView(APIView):
                 "fir_processing": response,
             }
         )
+
+
+class VictimAccusedAPI(APIView):
+    def get(self, request):
+        db = DB["analytics_fir"]
+        response = {}
+        response["victims"] = 0
+        response["accused"] = 0
+        data = db.find({})
+        for i in data:
+            response["victims"] = response["victims"] + i["VICTIM_COUNT"]
+            response["accused"] = response["accused"] + i["ACCUSED_COUNT"]
+
+        return Response(
+            {
+                "victims_accused_count": response,
+            }
+        )
