@@ -337,3 +337,24 @@ class FIRIdentificationMonthlyView(APIView):
                 "year": year,
             }
         )
+
+
+class ChargeSheetMonthlyView(APIView):
+    def get(self, request):
+        db = DB["analytics_chargesheet"]
+        response = {}
+        year = request.GET.get("year", 2023)
+
+        for i in range(1, 13):
+            data = db.count_documents(
+                {"Year": int(year), "Month": i},
+            )
+            month = calendar.month_abbr[i]
+            response[month] = data
+
+        return Response(
+            {
+                "month_wise_chargesheet_analytics": response,
+                "year": year,
+            }
+        )
