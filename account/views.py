@@ -116,3 +116,41 @@ class RegisterUser(APIView):
             return Response({"message": "User Created"}, status=HTTP_201_CREATED)
         else:
             return Response({"message": "User Exists"}, status=HTTP_400_BAD_REQUEST)
+
+
+class GetUpdateUsersAPI(APIView):
+    def get(self, request):
+        db = CustomUser.objects.all()
+        return Response(UserSerializer(db, many=True).data)
+
+    def post(self, request):
+        pk = request.COOKIES.get("uid", None)
+        if pk:
+            user = CustomUser.objects.get(pk=pk)
+            # if user.groups.filter(name="SP").exists():
+
+            employee_id = request.data.get("employee_id", user.employee_id)
+            username = request.data.get("username", user.username)
+            email = request.data.get("email", user.email)
+            first_name = request.data.get("first_name", user.first_name)
+            last_name = request.data.get("last_name", user.last_name)
+            department = request.data.get("department", user.department)
+
+            user.employee_id = employee_id
+            user.username = username
+            user.email = email
+            user.first_name = first_name
+            user.last_name = last_name
+            user.department = department
+            user.save()
+
+            return Response(UserSerializer(user).data)
+            # else:
+            #     return Response(
+            #         {"message": "User does not have permission"},
+            #         status=HTTP_401_UNAUTHORIZED,
+            #     )
+        else:
+            return Response(
+                {"message": "User not logged in"}, status=HTTP_404_NOT_FOUND
+            )
